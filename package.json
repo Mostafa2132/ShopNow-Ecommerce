@@ -9,12 +9,29 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "@splidejs/react-splide": "^0.7.12",
+    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-query-devtools": "^5.91.3",
+    "axios": "^1.13.5",
+    "cookies-next": "^6.1.1",
+    "formik": "^2.4.9",
+    "framer-motion": "^12.34.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-fast-marquee": "^1.6.5",
+    "react-helmet": "^6.1.0",
+    "react-icons": "^5.5.0",
+    "react-password-strength-bar": "^0.4.1",
+    "react-redux": "^9.2.0",
+    "react-toastify": "^11.0.5",
+    "swiper": "^12.1.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/node": "25.2.3",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

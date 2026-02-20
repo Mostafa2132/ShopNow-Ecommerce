@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  @apply bg-slate-950;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+button{
+@apply cursor-pointer
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+}
+
+/* Custom Swiper Styles */
+
+.category-swiper .swiper-button-prev,
+.category-swiper .swiper-button-next {
+  background: rgba(168, 85, 247, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.category-swiper:hover .swiper-button-prev,
+.category-swiper:hover .swiper-button-next {
+  opacity: 1;
+}
+
+.category-swiper .swiper-button-prev:hover,
+.category-swiper .swiper-button-next:hover {
+  background: rgba(168, 85, 247, 0.4);
+  border-color: rgba(168, 85, 247, 0.5);
+  transform: scale(1.1);
+}
+
+.category-swiper .swiper-pagination-bullet {
+  background: rgba(168, 85, 247, 0.3) !important;
+  position: relative;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+}
+
+.category-swiper .swiper-pagination-bullet-active {
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  width: 30px;
+  border-radius: 5px;
+}
+
+.category-swiper .swiper-button-disabled {
+  opacity: 0.3 !important;
+}
+
+/* Animation Keyframes */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
 }
