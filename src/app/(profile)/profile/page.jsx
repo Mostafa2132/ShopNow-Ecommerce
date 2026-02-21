@@ -141,9 +141,9 @@ export default function Profile() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/50 overflow-x-hidden backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
-          <div className="flex items-center overflow-x-hidden gap-6 mb-8">
+          <div className="flex items-center  gap-6 mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-purple-500/50">
               {user.name?.charAt(0).toUpperCase()}
             </div>

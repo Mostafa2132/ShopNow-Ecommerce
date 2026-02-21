@@ -385,14 +385,14 @@ export default function RelatedReviews({ id }) {
             </motion.button>
           </motion.div>
         )}
-        <div className="flex items-center gap-4 border-t mt-8 border-slate-700 flex-1 justify-center">
+        <div className="flex items-center flex-wrap gap-4 border-t pt-4 mt-6 border-slate-700 flex-1 justify-center">
           {/* Write Review Button (if reviews exist) */}
           {reviews.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-8 pt-8 text-center"
+              className=" text-center"
             >
               <motion.button
                 onClick={() => setIsModalReviewOPen(true)}
@@ -411,7 +411,7 @@ export default function RelatedReviews({ id }) {
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-8 pt-8 text-center"
+              className="  text-center"
             >
               <Link
                 href={`/reviews/${id}`}
