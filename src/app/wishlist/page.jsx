@@ -47,7 +47,7 @@ export default function WishlistPage() {
         <title>ShopNow | Wishlist </title>
       </Helmet>
 
-      <section className="relative min-h-screen bg-slate-950 py-20">
+      <section className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
         {/* Background Effects */}
         <FixedBackground />
 

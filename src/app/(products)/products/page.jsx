@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   FiFilter,
   FiX,
@@ -32,6 +32,8 @@ export default function GetAllProducts() {
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [sortBy, setSortBy] = useState("default");
   const [minRating, setMinRating] = useState(0);
+
+  const shouldReduceMotion = useReducedMotion();
 
   const productsPerPage = 12;
 
@@ -126,13 +128,14 @@ export default function GetAllProducts() {
         <title>ShopNow | All Products </title>
       </Helmet>
 
-      <section className="relative py-20 bg-slate-950 min-h-screen">
+      <main className="relative overflow-x-hidden py-20 bg-slate-950 min-h-screen">
         {/* Background Effects */}
-        <FixedBackground />
+        <div aria-hidden="true">
+          <FixedBackground />
+        </div>
 
         <div className="relative max-w-[87rem] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-
           <FixedHeader
             header={"EXPLORE"}
             subTitle={"Discover our wide range of premium products"}
@@ -142,17 +145,18 @@ export default function GetAllProducts() {
 
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Sidebar Filters - Desktop */}
-            <div className="hidden lg:block">
+            <aside className="hidden lg:block" aria-label="Filters">
               <div className="sticky top-24 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 space-y-6">
                 {/* Filter Header */}
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-bold flex items-center gap-2">
-                    <FiFilter size={20} />
+                  <h2 className="text-white font-bold flex items-center gap-2 m-0 text-base">
+                    <FiFilter size={20} aria-hidden="true" />
                     Filters
-                  </h3>
+                  </h2>
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-purple-400 hover:text-pink-400 transition-colors"
+                    className="text-sm text-purple-400 hover:text-pink-400 transition-colors focus:outline-none focus:underline"
+                    aria-label="Clear all filters"
                   >
                     Clear All
                   </button>
@@ -160,13 +164,14 @@ export default function GetAllProducts() {
 
                 {/* Search */}
                 <div>
-                  <label className="block text-slate-300 text-sm font-semibold mb-2">
+                  <label htmlFor="search-input" className="block text-slate-300 text-sm font-semibold mb-2">
                     Search
                   </label>
                   <div className="relative">
-                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
                     <input
-                      type="text"
+                      id="search-input"
+                      type="search"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search products..."
@@ -177,13 +182,14 @@ export default function GetAllProducts() {
 
                 {/* Category */}
                 <div>
-                  <label className="block text-slate-300 text-sm font-semibold mb-2">
+                  <label htmlFor="category-select" className="block text-slate-300 text-sm font-semibold mb-2">
                     Category
                   </label>
                   <select
+                    id="category-select"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-no-repeat bg-[position:right_0.75rem_center] pr-10"
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>
@@ -195,13 +201,14 @@ export default function GetAllProducts() {
 
                 {/* Brand */}
                 <div>
-                  <label className="block text-slate-300 text-sm font-semibold mb-2">
+                  <label htmlFor="brand-select" className="block text-slate-300 text-sm font-semibold mb-2">
                     Brand
                   </label>
                   <select
+                    id="brand-select"
                     value={selectedBrand}
                     onChange={(e) => setSelectedBrand(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-no-repeat bg-[position:right_0.75rem_center] pr-10"
                   >
                     {brands.map((brand) => (
                       <option key={brand} value={brand}>
@@ -213,21 +220,25 @@ export default function GetAllProducts() {
 
                 {/* Price Range */}
                 <div>
-                  <label className="block text-slate-300 text-sm font-semibold mb-2">
-                    Price Range
+                  <label htmlFor="price-range" className="block text-slate-300 text-sm font-semibold mb-2">
+                    Price Range (Up to ${priceRange[1]})
                   </label>
                   <div className="space-y-3">
                     <input
+                      id="price-range"
                       type="range"
                       min="0"
                       max="10000"
                       value={priceRange[1]}
                       onChange={(e) =>
-                        setPriceRange([0, parseInt(e.target.value)])
+                        setPriceRange([0, parseInt(e.target.value, 10)])
                       }
                       className="w-full accent-purple-500"
+                      aria-valuemin="0"
+                      aria-valuemax="10000"
+                      aria-valuenow={priceRange[1]}
                     />
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between text-sm" aria-hidden="true">
                       <span className="text-slate-400">$0</span>
                       <span className="text-white font-semibold">
                         ${priceRange[1]}
@@ -237,22 +248,24 @@ export default function GetAllProducts() {
                 </div>
 
                 {/* Rating */}
-                <div>
-                  <label className="block text-slate-300 text-sm font-semibold mb-3">
+                <fieldset>
+                  <legend className="block text-slate-300 text-sm font-semibold mb-3">
                     Minimum Rating
-                  </label>
+                  </legend>
                   <div className="space-y-2">
                     {[4, 3, 2, 1, 0].map((rating) => (
                       <button
                         key={rating}
                         onClick={() => setMinRating(rating)}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                        aria-pressed={minRating === rating}
+                        aria-label={`${rating} stars and up`}
+                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                           minRating === rating
                             ? "bg-purple-600 text-white"
                             : "bg-slate-800 text-slate-400 hover:bg-slate-700"
                         }`}
                       >
-                        <div className="flex">
+                        <div className="flex" aria-hidden="true">
                           {[...Array(5)].map((_, i) => (
                             <FiStar
                               key={i}
@@ -265,34 +278,37 @@ export default function GetAllProducts() {
                             />
                           ))}
                         </div>
-                        <span className="text-sm">& Up</span>
+                        <span className="text-sm" aria-hidden="true">& Up</span>
                       </button>
                     ))}
                   </div>
-                </div>
+                </fieldset>
               </div>
-            </div>
+            </aside>
 
             {/* Main Content */}
-            <div className="lg:col-span-3">
+            <section className="lg:col-span-3" aria-label="Products List">
               {/* Toolbar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-4">
+              <header className="flex flex-wrap items-center justify-between gap-4 mb-6 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-4">
                 {/* Mobile Filter Button */}
                 <button
                   onClick={() => setIsFilterOpen(true)}
-                  className="lg:hidden flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-xl font-semibold"
+                  className="lg:hidden flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-white"
+                  aria-expanded="false"
+                  aria-controls="mobile-filter-sidebar"
                 >
-                  <FiFilter size={18} />
+                  <FiFilter size={18} aria-hidden="true" />
                   Filters
                 </button>
 
                 {/* Sort */}
                 <div className="flex items-center gap-2">
-                  <label className="text-slate-400 text-sm">Sort by:</label>
+                  <label htmlFor="sort-select" className="text-slate-400 text-sm">Sort by:</label>
                   <select
+                    id="sort-select"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-no-repeat bg-[position:right_0.75rem_center] pr-10"
                   >
                     <option value="default">Default</option>
                     <option value="price-low">Price: Low to High</option>
@@ -303,28 +319,43 @@ export default function GetAllProducts() {
                 </div>
 
                 {/* View Mode */}
-                <div className="flex items-center gap-2 bg-slate-800 rounded-xl p-1">
+                <div
+                  className="flex items-center gap-2 bg-slate-800 rounded-xl p-1"
+                  role="group"
+                  aria-label="View mode"
+                >
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-2 rounded-lg transition-all ${
+                    aria-pressed={viewMode === "grid"}
+                    aria-label="Grid view"
+                    className={`p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                       viewMode === "grid"
                         ? "bg-purple-600 text-white"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <FiGrid size={18} />
+                    <FiGrid size={18} aria-hidden="true" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-2 rounded-lg transition-all ${
+                    aria-pressed={viewMode === "list"}
+                    aria-label="List view"
+                    className={`p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                       viewMode === "list"
                         ? "bg-purple-600 text-white"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <FiList size={18} />
+                    <FiList size={18} aria-hidden="true" />
                   </button>
                 </div>
+              </header>
+
+              {/* Announcements for Screen Readers */}
+              <div aria-live="polite" className="sr-only">
+                {currentProducts.length > 0
+                  ? `Showing ${currentProducts.length} products on this page.`
+                  : "No products found matching your filters."}
               </div>
 
               {/* Products Grid/List */}
@@ -342,7 +373,7 @@ export default function GetAllProducts() {
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                     <span className="text-4xl">🔍</span>
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">
@@ -353,7 +384,7 @@ export default function GetAllProducts() {
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl"
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500"
                   >
                     Clear Filters
                   </button>
@@ -368,7 +399,7 @@ export default function GetAllProducts() {
                   onPageChange={handlePageChange}
                 />
               )}
-            </div>
+            </section>
           </div>
         </div>
 
@@ -381,44 +412,52 @@ export default function GetAllProducts() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                 onClick={() => setIsFilterOpen(false)}
                 className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+                aria-hidden="true"
               />
 
               {/* Sidebar */}
-              <motion.div
-                initial={{ x: "-100%" }}
+              <motion.aside
+                id="mobile-filter-sidebar"
+                initial={{ x: shouldReduceMotion ? 0 : "-100%" }}
                 animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "spring", damping: 25 }}
+                exit={{ x: shouldReduceMotion ? 0 : "-100%" }}
+                transition={{ type: "spring", damping: 25, duration: shouldReduceMotion ? 0 : 0.4 }}
                 className="fixed left-0 top-0 bottom-0 w-80 bg-slate-900 z-50 overflow-y-auto lg:hidden"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Filter Options"
               >
                 <div className="p-6 space-y-6">
                   {/* Header */}
                   <div className="flex items-center justify-between">
-                    <h3 className="text-white font-bold text-xl flex items-center gap-2">
-                      <FiFilter size={24} />
+                    <h3 className="text-white font-bold text-xl flex items-center gap-2 m-0 border-0">
+                      <FiFilter size={24} aria-hidden="true" />
                       Filters
                     </h3>
                     <button
                       onClick={() => setIsFilterOpen(false)}
-                      className="p-2 text-slate-400 hover:text-white transition-colors"
+                      className="p-2 text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white rounded"
+                      aria-label="Close filters"
                     >
-                      <FiX size={24} />
+                      <FiX size={24} aria-hidden="true" />
                     </button>
                   </div>
 
-                  {/* Mobile Filters - Same as Desktop */}
+                  {/* Mobile Filters - Same as Desktop but with unique IDs for accessibility */}
                   <div className="space-y-6">
                     {/* Search */}
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">
+                      <label htmlFor="mobile-search-input" className="block text-slate-300 text-sm font-semibold mb-2">
                         Search
                       </label>
                       <div className="relative">
-                        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
                         <input
-                          type="text"
+                          id="mobile-search-input"
+                          type="search"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Search products..."
@@ -429,13 +468,14 @@ export default function GetAllProducts() {
 
                     {/* Category */}
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">
+                      <label htmlFor="mobile-category-select" className="block text-slate-300 text-sm font-semibold mb-2">
                         Category
                       </label>
                       <select
+                        id="mobile-category-select"
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-no-repeat bg-[position:right_0.75rem_center] pr-10"
                       >
                         {categories.map((cat) => (
                           <option key={cat} value={cat}>
@@ -447,13 +487,14 @@ export default function GetAllProducts() {
 
                     {/* Brand */}
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">
+                      <label htmlFor="mobile-brand-select" className="block text-slate-300 text-sm font-semibold mb-2">
                         Brand
                       </label>
                       <select
+                        id="mobile-brand-select"
                         value={selectedBrand}
                         onChange={(e) => setSelectedBrand(e.target.value)}
-                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-no-repeat bg-[position:right_0.75rem_center] pr-10"
                       >
                         {brands.map((brand) => (
                           <option key={brand} value={brand}>
@@ -465,21 +506,25 @@ export default function GetAllProducts() {
 
                     {/* Price Range */}
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">
-                        Price Range
+                      <label htmlFor="mobile-price-range" className="block text-slate-300 text-sm font-semibold mb-2">
+                        Price Range (Up to ${priceRange[1]})
                       </label>
                       <div className="space-y-3">
                         <input
+                          id="mobile-price-range"
                           type="range"
                           min="0"
                           max="10000"
                           value={priceRange[1]}
                           onChange={(e) =>
-                            setPriceRange([0, parseInt(e.target.value)])
+                            setPriceRange([0, parseInt(e.target.value, 10)])
                           }
                           className="w-full accent-purple-500"
+                          aria-valuemin="0"
+                          aria-valuemax="10000"
+                          aria-valuenow={priceRange[1]}
                         />
-                        <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center justify-between text-sm" aria-hidden="true">
                           <span className="text-slate-400">$0</span>
                           <span className="text-white font-semibold">
                             ${priceRange[1]}
@@ -489,22 +534,24 @@ export default function GetAllProducts() {
                     </div>
 
                     {/* Rating */}
-                    <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-3">
+                    <fieldset>
+                      <legend className="block text-slate-300 text-sm font-semibold mb-3">
                         Minimum Rating
-                      </label>
+                      </legend>
                       <div className="space-y-2">
                         {[4, 3, 2, 1, 0].map((rating) => (
                           <button
                             key={rating}
                             onClick={() => setMinRating(rating)}
-                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                            aria-pressed={minRating === rating}
+                            aria-label={`${rating} stars and up`}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                               minRating === rating
                                 ? "bg-purple-600 text-white"
                                 : "bg-slate-800 text-slate-400 hover:bg-slate-700"
                             }`}
                           >
-                            <div className="flex">
+                            <div className="flex" aria-hidden="true">
                               {[...Array(5)].map((_, i) => (
                                 <FiStar
                                   key={i}
@@ -517,34 +564,34 @@ export default function GetAllProducts() {
                                 />
                               ))}
                             </div>
-                            <span className="text-sm">& Up</span>
+                            <span className="text-sm" aria-hidden="true">& Up</span>
                           </button>
                         ))}
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
 
                   {/* Apply Buttons */}
                   <div className="space-y-3 pt-4 border-t border-slate-800">
                     <button
                       onClick={() => setIsFilterOpen(false)}
-                      className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl"
+                      className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500"
                     >
                       Apply Filters
                     </button>
                     <button
                       onClick={clearFilters}
-                      className="w-full py-3 bg-slate-800 text-white font-bold rounded-xl"
+                      className="w-full py-3 bg-slate-800 text-white font-bold rounded-xl focus:outline-none focus:ring-4 focus:ring-slate-500"
                     >
                       Clear All
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </motion.aside>
             </>
           )}
         </AnimatePresence>
-      </section>
+      </main>
     </>
   );
 }

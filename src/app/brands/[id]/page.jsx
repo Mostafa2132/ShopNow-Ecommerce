@@ -69,7 +69,7 @@ export default function GetBrandProducts({ params }) {
         <title>ShopNow | {brand.name} </title>
       </Helmet>
 
-      <section className="relative min-h-screen bg-slate-950 py-20">
+      <section className="relative overflow-x-hidden min-h-screen bg-slate-950 py-20">
         {/* Background Effects */}
         <FixedBackground />
 

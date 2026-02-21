@@ -42,9 +42,11 @@ export default function Brands() {
         <title>ShopNow | Brands </title>
       </Helmet>
 
-      <section className="relative min-h-screen bg-slate-950 py-20">
+      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
         {/* Background Effects */}
-        <FixedBackground />
+        <div aria-hidden="true">
+          <FixedBackground />
+        </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -59,15 +61,15 @@ export default function Brands() {
 
           {/* Brands Grid */}
           {brands.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6" aria-label="Brands Grid">
               {brands.map((brand, index) => (
                 <BrandCard key={brand._id} index={index} brand={brand} />
               ))}
             </div>
           ) : (
             /* Empty State */
-            <div className="text-center py-20">
-              <div className="w-24 h-24 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="text-center py-20" aria-live="polite">
+              <div className="w-24 h-24 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
                 <BsStars className="text-slate-600" size={40} />
               </div>
               <h3 className="text-2xl font-bold text-white mb-3">
@@ -81,33 +83,35 @@ export default function Brands() {
 
           {/* Stats Section */}
           {brands.length > 0 && (
-            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <section className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8" aria-label="Brand Statistics">
               <div className="text-center bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8">
-                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2" aria-hidden="true">
                   {brands.length}+
                 </div>
-                <p className="text-slate-400 font-semibold">Premium Brands</p>
-              </div>
-
-              <div className="text-center bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8">
-                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-                  100%
-                </div>
                 <p className="text-slate-400 font-semibold">
-                  Authentic Products
+                  <span className="sr-only">Over {brands.length} </span>Premium Brands
                 </p>
               </div>
 
               <div className="text-center bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8">
-                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2" aria-hidden="true">
+                  100%
+                </div>
+                <p className="text-slate-400 font-semibold">
+                  <span className="sr-only">100 percent </span>Authentic Products
+                </p>
+              </div>
+
+              <div className="text-center bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8">
+                <div className="text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2" aria-hidden="true">
                   24/7
                 </div>
-                <p className="text-slate-400 font-semibold">Customer Support</p>
+                <p className="text-slate-400 font-semibold"><span className="sr-only">24 hours a day, 7 days a week </span>Customer Support</p>
               </div>
-            </div>
+            </section>
           )}
         </div>
-      </section>
+      </main>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FiTrash2, FiTag, FiChevronDown, FiShoppingCart, FiAlertTriangle } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import {
   getCart,
@@ -23,6 +23,7 @@ export default function Cart() {
     (state) => state.cartReducer,
   );
   const { token } = useSelector((state) => state.authReducer);
+  const shouldReduceMotion = useReducedMotion();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(null);
@@ -92,14 +93,16 @@ export default function Cart() {
 
   return (
     <>
-      <section className="relative min-h-screen bg-slate-950 py-20">
+      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
         {/* Background Effects */}
-        <FixedBackground />
+        <div aria-hidden="true">
+          <FixedBackground />
+        </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="mb-12">
-            <div className="inline-flex items-center gap-2 bg-purple-600/10 backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 mb-6">
+          <header className="mb-12">
+            <div className="inline-flex items-center gap-2 bg-purple-600/10 backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 mb-6" aria-hidden="true">
               <BsStars className="text-purple-400" size={16} />
               <span className="text-purple-400 text-sm font-semibold">
                 SHOPPING CART
@@ -114,7 +117,7 @@ export default function Cart() {
                     Cart
                   </span>
                 </h1>
-                <p className="text-slate-400 text-lg">
+                <p className="text-slate-400 text-lg" aria-live="polite">
                   {cartCount > 0
                     ? `${cartCount} ${cartCount === 1 ? "item" : "items"} in your cart`
                     : "Your cart is empty"}
@@ -124,43 +127,45 @@ export default function Cart() {
               {cartCount > 0 && (
                 <button
                   onClick={() => setShowClearModal(true)}
-                  className="px-6 py-3 bg-red-600/20 border border-red-500/30 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition-all flex items-center gap-2"
+                  className="px-6 py-3 bg-red-600/20 border border-red-500/30 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition-all flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  aria-label="Clear all items from your cart"
                 >
-                  <FiTrash2 size={18} />
+                  <FiTrash2 size={18} aria-hidden="true" />
                   Clear Cart
                 </button>
               )}
             </div>
-          </div>
+          </header>
 
           {cartCount === 0 ? (
             /* Empty State */
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+            <motion.section
+              initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-20"
+              aria-labelledby="empty-cart-title"
             >
-              <div className="w-32 h-32 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-8">
+              <div className="w-32 h-32 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-8" aria-hidden="true">
                 <FiShoppingCart className="text-slate-600" size={64} />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-4">
+              <h2 id="empty-cart-title" className="text-3xl font-bold text-white mb-4">
                 Your cart is empty
-              </h3>
+              </h2>
               <p className="text-slate-400 mb-8 max-w-md mx-auto">
                 Looks like you haven't added anything to your cart yet. Start
                 shopping to fill it up!
               </p>
               <Link
                 href="/products"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500"
               >
                 Start Shopping
               </Link>
-            </motion.div>
+            </motion.section>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Cart Items */}
-              <div className="lg:col-span-2 space-y-4">
+              <section className="lg:col-span-2 space-y-4" aria-label="Cart Items">
                 <AnimatePresence>
                   {cartItems?.map((item, index) => (
                     <CartCard
@@ -173,27 +178,29 @@ export default function Cart() {
                     />
                   ))}
                 </AnimatePresence>
-              </div>
+              </section>
 
               {/* Sidebar */}
-              <div className="lg:col-span-1">
+              <aside className="lg:col-span-1" aria-label="Order Summary">
                 <div className="sticky top-24 space-y-6">
                   {/* Discount Code */}
-                  <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl overflow-hidden">
-                    <div
+                  <section className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl overflow-hidden" aria-labelledby="discount-heading">
+                    <button
                       onClick={() => setShowDiscountInput(!showDiscountInput)}
-                      className="p-6 cursor-pointer hover:bg-slate-800/50 transition-all"
+                      className="w-full text-left p-6 cursor-pointer hover:bg-slate-800/50 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 inset-0"
+                      aria-expanded={showDiscountInput}
+                      aria-controls="discount-input-section"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center" aria-hidden="true">
                             <FiTag className="text-amber-400" size={20} />
                           </div>
                           <div>
-                            <p className="text-white font-bold">
+                            <h2 id="discount-heading" className="text-white font-bold">
                               Discount Code
-                            </p>
-                            <p className="text-xs text-slate-400">
+                            </h2>
+                            <p className="text-xs text-slate-400" aria-live="polite">
                               {discountApplied
                                 ? `${discountApplied.code} Applied`
                                 : "Add a code to save"}
@@ -201,23 +208,28 @@ export default function Cart() {
                           </div>
                         </div>
                         <FiChevronDown
-                          className={`text-slate-400 transition-transform ${
+                          className={`text-slate-400 transition-transform duration-300 ${
                             showDiscountInput ? "rotate-180" : ""
                           }`}
                           size={20}
+                          aria-hidden="true"
                         />
                       </div>
-                    </div>
+                    </button>
 
                     <AnimatePresence>
                       {showDiscountInput && (
                         <motion.div
+                          id="discount-input-section"
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-slate-800 p-6"
+                          transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                          className="border-t border-slate-800 p-6 overflow-hidden"
                         >
+                          <label htmlFor="discount-code-input" className="sr-only">Enter discount code</label>
                           <input
+                            id="discount-code-input"
                             type="text"
                             placeholder="Enter code (e.g., SAVE10)"
                             value={discountCode}
@@ -226,17 +238,19 @@ export default function Cart() {
                               setError("");
                             }}
                             className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 mb-3"
+                            aria-invalid={!!error}
+                            aria-describedby={error ? "discount-error" : undefined}
                           />
                           <button
                             onClick={handleApplyDiscount}
-                            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+                            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-pink-500"
                           >
                             Apply Code
                           </button>
                           {error && (
-                            <p className="text-red-400 text-sm mt-2">{error}</p>
+                            <p id="discount-error" className="text-red-400 text-sm mt-2" aria-live="polite">{error}</p>
                           )}
-                          <p className="text-xs text-slate-500 mt-3">
+                          <p className="text-xs text-slate-500 mt-3" aria-hidden="true">
                             Try: SAVE10, SAVE20, or WELCOME
                           </p>
                         </motion.div>
@@ -244,7 +258,7 @@ export default function Cart() {
                     </AnimatePresence>
 
                     {discountApplied && (
-                      <div className="px-6 py-4 bg-emerald-600/10 border-t border-slate-800">
+                      <div className="px-6 py-4 bg-emerald-600/10 border-t border-slate-800" aria-live="polite">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm text-emerald-400">
                             Discount ({discountApplied.percentage}%)
@@ -255,19 +269,20 @@ export default function Cart() {
                         </div>
                         <button
                           onClick={() => setDiscountApplied(null)}
-                          className="text-xs text-emerald-400 hover:text-emerald-300"
+                          className="text-xs text-emerald-400 hover:text-emerald-300 focus:outline-none focus:underline"
+                          aria-label={`Remove discount code ${discountApplied.code}`}
                         >
                           Remove code
                         </button>
                       </div>
                     )}
-                  </div>
+                  </section>
 
                   {/* Order Summary */}
-                  <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-8 shadow-2xl shadow-purple-500/30">
-                    <h3 className="text-white font-black text-2xl mb-6">
+                  <section className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-8 shadow-2xl shadow-purple-500/30" aria-labelledby="summary-heading">
+                    <h2 id="summary-heading" className="text-white font-black text-2xl mb-6">
                       Order Summary
-                    </h3>
+                    </h2>
 
                     <div className="space-y-4 mb-6 pb-6 border-b border-white/20">
                       <div className="flex justify-between text-white/80">
@@ -292,7 +307,7 @@ export default function Cart() {
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center mb-8">
+                    <div className="flex justify-between items-center mb-8" aria-live="polite">
                       <span className="text-white text-xl font-bold">
                         Total
                       </span>
@@ -303,25 +318,25 @@ export default function Cart() {
 
                     <Link
                       href={"/check-out"}
-                      className="block text-center bg-white text-purple-600 font-black py-4 rounded-xl hover:bg-slate-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+                      className="block text-center bg-white text-purple-600 font-black py-4 rounded-xl hover:bg-slate-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
                     >
                       Proceed to Checkout
                     </Link>
 
-                    <p className="text-center text-white/70 text-xs mt-4">
+                    <p className="text-center text-white/70 text-xs mt-4" aria-live="polite">
                       🎉 You&apos;re saving{" "}
                       {discountApplied
                         ? `$${discountAmount}`
                         : "with free shipping"}
                       !
                     </p>
-                  </div>
+                  </section>
                 </div>
-              </div>
+              </aside>
             </div>
           )}
         </div>
-      </section>
+      </main>
 
       {/* Clear Cart Modal */}
       <AnimatePresence>
@@ -332,32 +347,35 @@ export default function Cart() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
               onClick={() => setShowClearModal(false)}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+              aria-hidden="true"
             />
 
             {/* Modal */}
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="clear-cart-title" aria-describedby="clear-cart-description">
               <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                initial={{ scale: shouldReduceMotion ? 1 : 0.9, opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                exit={{ scale: shouldReduceMotion ? 1 : 0.9, opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                 onClick={(e) => e.stopPropagation()}
                 className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
               >
                 {/* Header */}
-                <div className="bg-gradient-to-r from-red-600/20 to-pink-600/20 border-b border-slate-800 p-6">
-                  <div className="w-16 h-16 bg-red-500/20 border border-red-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <header className="bg-gradient-to-r from-red-600/20 to-pink-600/20 border-b border-slate-800 p-6">
+                  <div className="w-16 h-16 bg-red-500/20 border border-red-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                     <FiAlertTriangle className="text-red-400" size={32} />
                   </div>
-                  <h2 className="text-2xl font-black text-white text-center">
+                  <h2 id="clear-cart-title" className="text-2xl font-black text-white text-center">
                     Clear Your Cart?
                   </h2>
-                </div>
+                </header>
 
                 {/* Content */}
                 <div className="p-6">
-                  <p className="text-slate-300 text-center mb-6">
+                  <p id="clear-cart-description" className="text-slate-300 text-center mb-6">
                     Are you sure you want to remove all{" "}
                     <span className="text-white font-bold">{cartCount}</span>{" "}
                     {cartCount === 1 ? "item" : "items"} from your cart? This
@@ -365,7 +383,7 @@ export default function Cart() {
                   </p>
 
                   {/* Items Preview */}
-                  <div className="bg-slate-800/50 rounded-xl p-4 mb-6">
+                  <div className="bg-slate-800/50 rounded-xl p-4 mb-6" aria-hidden="true">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-slate-400 text-sm">Total Items</span>
                       <span className="text-white font-bold">{cartCount}</span>
@@ -382,13 +400,13 @@ export default function Cart() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowClearModal(false)}
-                      className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold rounded-xl transition-all"
+                      className="flex-1 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-white"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleClearCart}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500"
                     >
                       Clear Cart
                     </button>

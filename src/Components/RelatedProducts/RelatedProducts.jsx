@@ -3,8 +3,8 @@
 import axios from "axios";
 import ProductCard from "../ProductCard/ProductCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
-import { motion } from "framer-motion";
+import {  Autoplay, A11y } from "swiper/modules";
+import { motion, useReducedMotion } from "framer-motion";
 import { FiPackage } from "react-icons/fi";
 
 // Import Swiper styles
@@ -18,6 +18,8 @@ import FixedBackground from "../FixedBackground/FixedBackground";
 import FixedHeader from "../FixedHeader/FixedHeader";
 
 export default function RelatedProducts({ categoryId, currentProductId }) {
+  const shouldReduceMotion = useReducedMotion();
+
   async function getRelatedProducts() {
     try {
       const { data } = await axios.get(
@@ -50,14 +52,17 @@ export default function RelatedProducts({ categoryId, currentProductId }) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       className="relative py-16"
+      aria-label="Related Products"
     >
       {/* Background Effects */}
-      <FixedBackground />
+      <div aria-hidden="true">
+        <FixedBackground />
+      </div>
 
       {/* Header */}
       <FixedHeader
@@ -69,16 +74,22 @@ export default function RelatedProducts({ categoryId, currentProductId }) {
       />
 
       {/* Swiper Container */}
-      <div className="related-products-swiper">
+      <div className="related-products-swiper px-2 sm:px-4">
         <Swiper
-          modules={[Autoplay]}
+          modules={[Autoplay, A11y]}
           spaceBetween={24}
           slidesPerView={1}
           navigation
-          autoplay={{
+          autoplay={shouldReduceMotion ? false : {
             delay: 4000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
+          }}
+          a11y={{
+            prevSlideMessage: "Previous related products",
+            nextSlideMessage: "Next related products",
+            firstSlideMessage: "This is the first related product",
+            lastSlideMessage: "This is the last related product",
           }}
           loop={products.length > 4}
           breakpoints={{
@@ -104,10 +115,10 @@ export default function RelatedProducts({ categoryId, currentProductId }) {
           {products.map((product, index) => (
             <SwiperSlide key={product.id}>
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
+                transition={{ duration: 0.3, delay: shouldReduceMotion ? 0 : index * 0.08 }}
               >
                 <ProductCard product={product} />
               </motion.div>

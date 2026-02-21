@@ -60,7 +60,7 @@ export default function About() {
       <Helmet>
         <title>ShopNow | About Page </title>
       </Helmet>
-      <section className="relative py-20 bg-slate-950 min-h-screen">
+      <section className="relative py-20 overflow-x-hidden bg-slate-950 min-h-screen">
         <FixedBackground />
 
         <div className="relative max-w-[87rem] mx-auto px-4 sm:px-6 lg:px-8">

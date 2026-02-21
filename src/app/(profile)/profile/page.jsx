@@ -136,15 +136,15 @@ export default function Profile() {
         <title>ShopNow | Profile </title>
       </Helmet>
 
-      <section className="space-y-6">
+      <section className="space-y-6 ">
         {/* Profile Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          className="bg-slate-900/50 overflow-x-hidden backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
-          <div className="flex items-center gap-6 mb-8">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-purple-500/50">
+          <div className="flex items-center overflow-x-hidden gap-6 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-purple-500/50">
               {user.name?.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -195,7 +195,7 @@ export default function Profile() {
         </motion.div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4  gap-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -266,7 +266,7 @@ export default function Profile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
           <h3 className="text-2xl font-black text-white mb-6">
             Activity Overview
@@ -336,16 +336,16 @@ export default function Profile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
           <h3 className="text-2xl font-black text-white mb-6">
             Recent Activity
           </h3>
 
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             {/* Last Order */}
             {orders.length > 0 && (
-              <div className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+              <div className="flex items-center gap-4  bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <FiShoppingBag className="text-purple-400" size={20} />
                 </div>
@@ -376,7 +376,7 @@ export default function Profile() {
 
             {/* Last Review */}
             {userReviews.length > 0 && (
-              <div className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+              <div className="flex items-center  gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
                   <FiStar className="text-amber-400" size={20} />
                 </div>
