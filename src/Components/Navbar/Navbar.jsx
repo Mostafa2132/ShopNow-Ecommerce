@@ -197,12 +197,12 @@ export default function Navbar() {
             {/* Mobile Actions */}
             {token && (
               <div className="flex gap-3 pt-4">
-                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
+                <Link href={"/wishlist"} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
                   <FiHeart className="text-pink-400" size={18} />
                   <span className="text-white font-semibold text-sm">
                     Wishlist
                   </span>
-                </button>
+                </Link>
                 <button
                   onClick={() => setIsUserOpen(!isUserOpen)}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg shadow-purple-500/50"
