@@ -44,7 +44,7 @@ export default function ProductCard({ product }) {
         {/* Image Section */}
         <div className="relative h-80 overflow-hidden bg-slate-800">
           {/* Main Image */}
-          <Link href={`/productDetails/${data.id}`} className="absolute w-full h-full inset-0 z-0 outline-none focus-visible:ring-4 focus-visible:ring-purple-500">
+          <Link href={`/products/${data.id}`} className="absolute w-full h-full inset-0 z-0 outline-none focus-visible:ring-4 focus-visible:ring-purple-500">
              <span className="sr-only">Go to detailed product page for {data.title}</span>
             <Image
               src={data.images?.[currentImage] || data.imageCover}
