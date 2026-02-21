@@ -1,7 +1,7 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { MdErrorOutline } from "react-icons/md";
 import { FiMail, FiPhone, FiSave, FiUser } from "react-icons/fi";
 import Link from "next/link";
@@ -48,6 +48,7 @@ export default function UpdateUserInfo() {
   const [fieldErrors, setFieldErrors] = useState({});
   const queryClient = useQueryClient();
   const { token } = useSelector((store) => store.authReducer);
+  const shouldReduceMotion = useReducedMotion();
 
   // Get User Data
   const {
@@ -151,8 +152,9 @@ export default function UpdateUserInfo() {
       </Helmet>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
         className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
       >
         {/* Header */}
@@ -165,33 +167,40 @@ export default function UpdateUserInfo() {
         />
 
         {/* Form */}
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
           {/* General API Error */}
           {apiError && (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
               animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
               className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm"
+              role="alert"
+              aria-live="polite"
             >
-              <MdErrorOutline size={20} />
+              <MdErrorOutline size={20} aria-hidden="true" />
               <span>{apiError}</span>
             </motion.div>
           )}
 
           {/* Name */}
           <div>
-            <label className="block text-slate-300 text-sm font-semibold mb-2">
+            <label htmlFor="name" className="block text-slate-300 text-sm font-semibold mb-2">
               Full Name
             </label>
             <div className="relative">
               <FiUser
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 size={20}
+                aria-hidden="true"
               />
               <input
+                id="name"
                 type="text"
                 placeholder="Enter your full name"
                 {...formik.getFieldProps("name")}
+                aria-invalid={!!((formik.errors.name && formik.touched.name) || fieldErrors.name)}
+                aria-describedby={(formik.errors.name && formik.touched.name) || fieldErrors.name ? "name-error" : undefined}
                 className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 ${
                   (formik.errors.name && formik.touched.name) ||
                   fieldErrors.name
@@ -203,11 +212,15 @@ export default function UpdateUserInfo() {
             {((formik.errors.name && formik.touched.name) ||
               fieldErrors.name) && (
               <motion.p
-                initial={{ opacity: 0, y: -10 }}
+                id="name-error"
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                 className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                role="alert"
+                aria-live="polite"
               >
-                <MdErrorOutline size={16} />
+                <MdErrorOutline size={16} aria-hidden="true" />
                 {fieldErrors.name || formik.errors.name}
               </motion.p>
             )}
@@ -215,18 +228,22 @@ export default function UpdateUserInfo() {
 
           {/* Email */}
           <div>
-            <label className="block text-slate-300 text-sm font-semibold mb-2">
+            <label htmlFor="email" className="block text-slate-300 text-sm font-semibold mb-2">
               Email Address
             </label>
             <div className="relative">
               <FiMail
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 size={20}
+                aria-hidden="true"
               />
               <input
+                id="email"
                 type="email"
                 placeholder="Enter your email"
                 {...formik.getFieldProps("email")}
+                aria-invalid={!!((formik.errors.email && formik.touched.email) || fieldErrors.email)}
+                aria-describedby={(formik.errors.email && formik.touched.email) || fieldErrors.email ? "email-error" : undefined}
                 className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 ${
                   (formik.errors.email && formik.touched.email) ||
                   fieldErrors.email
@@ -238,11 +255,15 @@ export default function UpdateUserInfo() {
             {((formik.errors.email && formik.touched.email) ||
               fieldErrors.email) && (
               <motion.p
-                initial={{ opacity: 0, y: -10 }}
+                id="email-error"
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                 className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                role="alert"
+                aria-live="polite"
               >
-                <MdErrorOutline size={16} />
+                <MdErrorOutline size={16} aria-hidden="true" />
                 {fieldErrors.email || formik.errors.email}
               </motion.p>
             )}
@@ -250,18 +271,22 @@ export default function UpdateUserInfo() {
 
           {/* Phone */}
           <div>
-            <label className="block text-slate-300 text-sm font-semibold mb-2">
+            <label htmlFor="phone" className="block text-slate-300 text-sm font-semibold mb-2">
               Phone Number
             </label>
             <div className="relative">
               <FiPhone
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 size={20}
+                aria-hidden="true"
               />
               <input
+                id="phone"
                 type="tel"
                 placeholder="01XXXXXXXXX"
                 {...formik.getFieldProps("phone")}
+                aria-invalid={!!((formik.errors.phone && formik.touched.phone) || fieldErrors.phone)}
+                aria-describedby={(formik.errors.phone && formik.touched.phone) || fieldErrors.phone ? "phone-error phone-hint" : "phone-hint"}
                 className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 ${
                   (formik.errors.phone && formik.touched.phone) ||
                   fieldErrors.phone
@@ -273,15 +298,19 @@ export default function UpdateUserInfo() {
             {((formik.errors.phone && formik.touched.phone) ||
               fieldErrors.phone) && (
               <motion.p
-                initial={{ opacity: 0, y: -10 }}
+                id="phone-error"
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                 className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                role="alert"
+                aria-live="polite"
               >
-                <MdErrorOutline size={16} />
+                <MdErrorOutline size={16} aria-hidden="true" />
                 {fieldErrors.phone || formik.errors.phone}
               </motion.p>
             )}
-            <p className="text-slate-500 text-xs mt-2">
+            <p id="phone-hint" className="text-slate-500 text-xs mt-2">
               Egyptian format: 01XXXXXXXXX
             </p>
           </div>
@@ -295,23 +324,27 @@ export default function UpdateUserInfo() {
                 setFieldErrors({});
               }}
               disabled={updateMutation.isPending}
-              className="flex-1 px-6 py-4 bg-slate-800 text-white font-semibold rounded-xl hover:bg-slate-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-4 bg-slate-800 text-white font-semibold rounded-xl hover:bg-slate-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               Reset
             </button>
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
               type="submit"
               disabled={updateMutation.isPending || !formik.dirty}
-              className="flex-1 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-pink-500"
             >
-              <FiSave size={20} />
+              <FiSave size={20} aria-hidden="true" />
               <span className="relative z-10">
                 {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div
+                className={`absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 ${
+                  shouldReduceMotion ? "hidden" : "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                }`}
+              />
             </motion.button>
           </div>
 
@@ -319,7 +352,7 @@ export default function UpdateUserInfo() {
           <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-blue-400 text-lg">ℹ️</span>
+                <span className="text-blue-400 text-lg" aria-hidden="true">ℹ️</span>
               </div>
               <div>
                 <h4 className="text-blue-400 font-semibold text-sm mb-1">
@@ -330,7 +363,7 @@ export default function UpdateUserInfo() {
                   your password, please visit the{" "}
                   <Link
                     href="/profile/change-password"
-                    className="text-blue-400 hover:text-blue-300 underline"
+                    className="text-blue-400 hover:text-blue-300 underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                   >
                     Change Password
                   </Link>{" "}

@@ -11,7 +11,7 @@ import {
   FiMapPin,
   FiStar,
 } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useSelector } from "react-redux";
 import SimpleLoad from "../../../Components/SimpleLoad/SimpleLoad";
 import SimpleError from "../../../Components/SimpleError/SimpleError";
@@ -76,6 +76,7 @@ export default function Profile() {
   const wishListCount = useSelector(
     (state) => state.wishlistReducer.wishlistCount,
   );
+  const shouldReduceMotion = useReducedMotion();
 
   // Get User Data
   const {
@@ -136,14 +137,15 @@ export default function Profile() {
         <title>ShopNow | Profile </title>
       </Helmet>
 
-      <section className="space-y-6 ">
+      <div className="space-y-6">
         {/* Profile Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
-          <div className="flex items-center  gap-6 mb-8">
+          <div className="flex items-center gap-6 mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-purple-500/50">
               {user.name?.charAt(0).toUpperCase()}
             </div>
@@ -160,7 +162,7 @@ export default function Profile() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <FiUser className="text-purple-400" size={20} />
+                <FiUser className="text-purple-400" size={20} aria-hidden="true" />
               </div>
               <div>
                 <p className="text-slate-400 text-sm mb-1">Full Name</p>
@@ -170,7 +172,7 @@ export default function Profile() {
 
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <FiMail className="text-emerald-400" size={20} />
+                <FiMail className="text-emerald-400" size={20} aria-hidden="true" />
               </div>
               <div>
                 <p className="text-slate-400 text-sm mb-1">Email Address</p>
@@ -183,7 +185,7 @@ export default function Profile() {
             {user.phone && (
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-pink-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <FiPhone className="text-pink-400" size={20} />
+                  <FiPhone className="text-pink-400" size={20} aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-slate-400 text-sm mb-1">Phone Number</p>
@@ -195,15 +197,15 @@ export default function Profile() {
         </motion.div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4  gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: shouldReduceMotion ? 0 : 0.1, duration: shouldReduceMotion ? 0 : 0.3 }}
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6 text-center hover:border-purple-500/50 transition-all duration-300 group"
           >
             <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-              <FiShoppingBag className="text-purple-400" size={24} />
+              <FiShoppingBag className="text-purple-400" size={24} aria-hidden="true" />
             </div>
             <div className="text-4xl font-black bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent mb-2">
               {orders.length}
@@ -212,13 +214,13 @@ export default function Profile() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: shouldReduceMotion ? 0 : 0.2, duration: shouldReduceMotion ? 0 : 0.3 }}
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6 text-center hover:border-pink-500/50 transition-all duration-300 group"
           >
             <div className="w-12 h-12 bg-pink-600/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-              <FiHeart className="text-pink-400" size={24} />
+              <FiHeart className="text-pink-400" size={24} aria-hidden="true" />
             </div>
             <div className="text-4xl font-black bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent mb-2">
               {wishListCount}
@@ -229,13 +231,13 @@ export default function Profile() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: shouldReduceMotion ? 0 : 0.3, duration: shouldReduceMotion ? 0 : 0.3 }}
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6 text-center hover:border-emerald-500/50 transition-all duration-300 group"
           >
             <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-              <FiMapPin className="text-emerald-400" size={24} />
+              <FiMapPin className="text-emerald-400" size={24} aria-hidden="true" />
             </div>
             <div className="text-4xl font-black bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent mb-2">
               {addresses.length}
@@ -244,13 +246,13 @@ export default function Profile() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: shouldReduceMotion ? 0 : 0.4, duration: shouldReduceMotion ? 0 : 0.3 }}
             className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6 text-center hover:border-amber-500/50 transition-all duration-300 group"
           >
             <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-              <FiStar className="text-amber-400" size={24} />
+              <FiStar className="text-amber-400" size={24} aria-hidden="true" />
             </div>
             <div className="text-4xl font-black bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent mb-2">
               {userReviews.length}
@@ -263,10 +265,10 @@ export default function Profile() {
 
         {/* Activity Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          transition={{ delay: shouldReduceMotion ? 0 : 0.5, duration: shouldReduceMotion ? 0 : 0.3 }}
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
           <h3 className="text-2xl font-black text-white mb-6">
             Activity Overview
@@ -280,7 +282,7 @@ export default function Profile() {
                   Total Spent
                 </p>
                 <div className="w-10 h-10 bg-purple-600/20 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">💰</span>
+                  <span className="text-xl" aria-hidden="true">💰</span>
                 </div>
               </div>
               <p className="text-3xl font-black text-white mb-1">
@@ -296,7 +298,7 @@ export default function Profile() {
                   Avg Order
                 </p>
                 <div className="w-10 h-10 bg-emerald-600/20 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">📊</span>
+                  <span className="text-xl" aria-hidden="true">📊</span>
                 </div>
               </div>
               <p className="text-3xl font-black text-white mb-1">
@@ -315,7 +317,7 @@ export default function Profile() {
                   Avg Rating
                 </p>
                 <div className="w-10 h-10 bg-amber-600/20 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">⭐</span>
+                  <span className="text-xl" aria-hidden="true">⭐</span>
                 </div>
               </div>
               <p className="text-3xl font-black text-white mb-1">
@@ -333,21 +335,21 @@ export default function Profile() {
 
         {/* Recent Activity */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-slate-900/50  backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
+          transition={{ delay: shouldReduceMotion ? 0 : 0.6, duration: shouldReduceMotion ? 0 : 0.3 }}
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
           <h3 className="text-2xl font-black text-white mb-6">
             Recent Activity
           </h3>
 
-          <div className="space-y-4 ">
+          <div className="space-y-4">
             {/* Last Order */}
             {orders.length > 0 && (
-              <div className="flex items-center gap-4  bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+              <div className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <FiShoppingBag className="text-purple-400" size={20} />
+                  <FiShoppingBag className="text-purple-400" size={20} aria-hidden="true" />
                 </div>
                 <div className="flex-1">
                   <p className="text-white font-semibold">Latest Order</p>
@@ -376,9 +378,9 @@ export default function Profile() {
 
             {/* Last Review */}
             {userReviews.length > 0 && (
-              <div className="flex items-center  gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+              <div className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <FiStar className="text-amber-400" size={20} />
+                  <FiStar className="text-amber-400" size={20} aria-hidden="true" />
                 </div>
                 <div className="flex-1">
                   <p className="text-white font-semibold">Latest Review</p>
@@ -386,12 +388,13 @@ export default function Profile() {
                     {userReviews[0].review}
                   </p>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1" aria-label={`Rated ${userReviews[0].rating} out of 5 stars`}>
                   {[...Array(userReviews[0].rating)].map((_, i) => (
                     <FiStar
                       key={i}
                       size={14}
                       className="text-yellow-400 fill-yellow-400"
+                      aria-hidden="true"
                     />
                   ))}
                 </div>
@@ -406,7 +409,7 @@ export default function Profile() {
             )}
           </div>
         </motion.div>
-      </section>
+      </div>
     </>
   );
 }

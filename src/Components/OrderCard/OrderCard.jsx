@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { FiCalendar, FiCheckCircle, FiDollarSign, FiPackage, FiTruck } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+
 export default function OrderCard({order,index}) {
+  const shouldReduceMotion = useReducedMotion();
 
   // Get Status Color
   const getStatusColor = (isPaid, isDelivered) => {
@@ -27,158 +29,172 @@ export default function OrderCard({order,index}) {
   };
 
   return (
-    <motion.div
-              key={order.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all duration-300"
+    <motion.article
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: shouldReduceMotion ? 0 : index * 0.1 }}
+      className={`bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 ${shouldReduceMotion ? '' : 'hover:border-purple-500/50'}`}
+    >
+      {/* Order Header */}
+      <header className="p-6 border-b border-slate-800">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          {/* Order Info */}
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <h3 className="text-white font-bold text-lg">
+                Order #{order.id}
+              </h3>
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
+                  order.isPaid,
+                  order.isDelivered
+                )}`}
+              >
+                {getStatusText(order.isPaid, order.isDelivered)}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-sm text-slate-400">
+              <div className="flex items-center gap-2">
+                <FiCalendar size={16} aria-hidden="true" />
+                <span>
+                  <span className="sr-only">Ordered on: </span>
+                  {formatDate(order.createdAt)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FiPackage size={16} aria-hidden="true" />
+                <span>
+                  {order.cartItems?.length || 0} <span className="sr-only">items in order</span>
+                  <span aria-hidden="true"> items</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Total */}
+          <div className="text-right">
+            <p className="text-slate-400 text-sm mb-1">Total Amount</p>
+            <p className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="sr-only">Total: </span>
+              ${order.totalOrderPrice}
+            </p>
+          </div>
+        </div>
+      </header>
+
+      {/* Order Details */}
+      <div className="p-6">
+        {/* Products */}
+        <div className="space-y-4 mb-6" aria-label={`Products in order #${order.id}`}>
+          {order.cartItems?.map((item) => (
+            <div
+              key={item._id}
+              className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4"
             >
-              {/* Order Header */}
-              <div className="p-6 border-b border-slate-800">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  {/* Order Info */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-white font-bold text-lg">
-                        Order #{order.id}
-                      </h3>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-                          order.isPaid,
-                          order.isDelivered
-                        )}`}
-                      >
-                        {getStatusText(order.isPaid, order.isDelivered)}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-4 text-sm text-slate-400">
-                      <div className="flex items-center gap-2">
-                        <FiCalendar size={16} />
-                        {formatDate(order.createdAt)}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FiPackage size={16} />
-                        {order.cartItems?.length || 0} items
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Order Total */}
-                  <div className="text-right">
-                    <p className="text-slate-400 text-sm mb-1">Total Amount</p>
-                    <p className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      ${order.totalOrderPrice}
-                    </p>
-                  </div>
-                </div>
+              {/* Product Image */}
+              <div className="relative w-20 h-20 bg-white/5 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src={item.product?.imageCover || "/placeholder.png"}
+                  alt=""
+                  fill
+                  sizes="80px"
+                  className="object-cover"
+                  aria-hidden="true"
+                />
               </div>
 
-              {/* Order Details */}
-              <div className="p-6">
-                {/* Products */}
-                <div className="space-y-4 mb-6">
-                  {order.cartItems?.map((item) => (
-                    <div
-                      key={item._id}
-                      className="flex items-center gap-4 bg-slate-800/50 rounded-xl p-4"
-                    >
-                      {/* Product Image */}
-                      <div className="relative w-20 h-20 bg-white/5 rounded-lg overflow-hidden flex-shrink-0">
-                        <Image
-                          src={item.product?.imageCover || "/placeholder.png"}
-                          alt={item.product?.title || "Product"}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      {/* Product Info */}
-                      <div className="flex-1">
-                        <h4 className="text-white font-semibold text-sm mb-1 line-clamp-1">
-                          {item.product?.title}
-                        </h4>
-                        <p className="text-slate-400 text-xs mb-1">
-                          Quantity: {item.count}
-                        </p>
-                        <p className="text-purple-400 font-bold text-sm">
-                          ${item.price}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Order Summary */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {/* Payment Method */}
-                  <div className="bg-slate-800/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiDollarSign className="text-purple-400" size={18} />
-                      <p className="text-slate-400 text-xs">Payment</p>
-                    </div>
-                    <p className="text-white font-semibold text-sm">
-                      {order.paymentMethodType === "cash" ? "Cash" : "Card"}
-                    </p>
-                  </div>
-
-                  {/* Shipping Price */}
-                  <div className="bg-slate-800/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiTruck className="text-emerald-400" size={18} />
-                      <p className="text-slate-400 text-xs">Shipping</p>
-                    </div>
-                    <p className="text-white font-semibold text-sm">
-                      ${order.shippingPrice || 0}
-                    </p>
-                  </div>
-
-                  {/* Payment Status */}
-                  <div className="bg-slate-800/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiCheckCircle
-                        className={order.isPaid ? "text-emerald-400" : "text-amber-400"}
-                        size={18}
-                      />
-                      <p className="text-slate-400 text-xs">Paid</p>
-                    </div>
-                    <p className="text-white font-semibold text-sm">
-                      {order.isPaid ? "Yes" : "No"}
-                    </p>
-                  </div>
-
-                  {/* Delivery Status */}
-                  <div className="bg-slate-800/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiPackage
-                        className={order.isDelivered ? "text-emerald-400" : "text-amber-400"}
-                        size={18}
-                      />
-                      <p className="text-slate-400 text-xs">Delivered</p>
-                    </div>
-                    <p className="text-white font-semibold text-sm">
-                      {order.isDelivered ? "Yes" : "No"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Shipping Address */}
-                {order.shippingAddress && (
-                  <div className="mt-6 bg-slate-800/30 rounded-xl p-4">
-                    <p className="text-slate-400 text-xs mb-2">Shipping Address</p>
-                    <p className="text-white font-semibold text-sm">
-                      {order.shippingAddress.details}
-                    </p>
-                    <p className="text-slate-400 text-sm">
-                      {order.shippingAddress.city}
-                    </p>
-                    <p className="text-slate-400 text-sm">
-                      {order.shippingAddress.phone}
-                    </p>
-                  </div>
-                )}
+              {/* Product Info */}
+              <div className="flex-1">
+                <h4 className="text-white font-semibold text-sm mb-1 line-clamp-1">
+                  {item.product?.title}
+                </h4>
+                <p className="text-slate-400 text-xs mb-1">
+                  Quantity: {item.count}
+                </p>
+                <p className="text-purple-400 font-bold text-sm">
+                  ${item.price}
+                </p>
               </div>
-            </motion.div>
+            </div>
+          ))}
+        </div>
+
+        {/* Order Summary */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4" aria-label="Order Status and Payment Details">
+          {/* Payment Method */}
+          <div className="bg-slate-800/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <FiDollarSign className="text-purple-400" size={18} aria-hidden="true" />
+              <p className="text-slate-400 text-xs">Payment</p>
+            </div>
+            <p className="text-white font-semibold text-sm">
+              <span className="sr-only">Method: </span>
+              {order.paymentMethodType === "cash" ? "Cash" : "Card"}
+            </p>
+          </div>
+
+          {/* Shipping Price */}
+          <div className="bg-slate-800/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <FiTruck className="text-emerald-400" size={18} aria-hidden="true" />
+              <p className="text-slate-400 text-xs">Shipping</p>
+            </div>
+            <p className="text-white font-semibold text-sm">
+              <span className="sr-only">Cost: </span>
+              ${order.shippingPrice || 0}
+            </p>
+          </div>
+
+          {/* Payment Status */}
+          <div className="bg-slate-800/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <FiCheckCircle
+                className={order.isPaid ? "text-emerald-400" : "text-amber-400"}
+                size={18}
+                aria-hidden="true"
+              />
+              <p className="text-slate-400 text-xs">Paid</p>
+            </div>
+            <p className="text-white font-semibold text-sm">
+              <span className="sr-only">Has been paid: </span>
+              {order.isPaid ? "Yes" : "No"}
+            </p>
+          </div>
+
+          {/* Delivery Status */}
+          <div className="bg-slate-800/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <FiPackage
+                className={order.isDelivered ? "text-emerald-400" : "text-amber-400"}
+                size={18}
+                aria-hidden="true"
+              />
+              <p className="text-slate-400 text-xs">Delivered</p>
+            </div>
+            <p className="text-white font-semibold text-sm">
+              <span className="sr-only">Has been delivered: </span>
+              {order.isDelivered ? "Yes" : "No"}
+            </p>
+          </div>
+        </div>
+
+        {/* Shipping Address */}
+        {order.shippingAddress && (
+          <address className="mt-6 bg-slate-800/30 rounded-xl p-4 not-italic">
+            <p className="text-slate-400 text-xs mb-2">Shipping Address</p>
+            <p className="text-white font-semibold text-sm">
+              {order.shippingAddress.details}
+            </p>
+            <p className="text-slate-400 text-sm">
+              {order.shippingAddress.city}
+            </p>
+            <p className="text-slate-400 text-sm">
+              {order.shippingAddress.phone}
+            </p>
+          </address>
+        )}
+      </div>
+    </motion.article>
   )
 }

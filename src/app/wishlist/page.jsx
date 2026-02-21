@@ -9,7 +9,7 @@ import {
 import { addItemToCart } from "../../store/slices/cartSlice";
 import { FiHeart, FiTrash2, FiShoppingCart, FiStar } from "react-icons/fi";
 import { BsStars } from "react-icons/bs";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import SimpleLoad from "../../Components/SimpleLoad/SimpleLoad";
@@ -24,6 +24,8 @@ export default function WishlistPage() {
   const { wishlistItems, loading, wishlistCount } = useSelector(
     (store) => store.wishlistReducer,
   );
+  
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (token) {
@@ -47,61 +49,66 @@ export default function WishlistPage() {
         <title>ShopNow | Wishlist </title>
       </Helmet>
 
-      <section className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
+      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
         {/* Background Effects */}
-        <FixedBackground />
+        <div aria-hidden="true">
+          <FixedBackground />
+        </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-12">
+          <header className="text-center mb-12">
             <FixedHeader
               header={"YOUR FAVORITES"}
               word={"My"}
               title={"Wishlist"}
             />
 
-            <div className="flex items-center justify-center gap-2 text-slate-400 text-lg">
-              <FiHeart className="text-pink-400" size={20} />
+            <div className="flex items-center justify-center gap-2 text-slate-400 text-lg" aria-live="polite">
+              <FiHeart className="text-pink-400" size={20} aria-hidden="true" />
               <span>
                 {wishlistCount > 0
                   ? `${wishlistCount} ${wishlistCount === 1 ? "item" : "items"} saved`
                   : "No items yet"}
               </span>
             </div>
-          </div>
+          </header>
 
           {/* Wishlist Content */}
           {wishlistItems.length > 0 ? (
-            <>
+            <section aria-label="Wishlist items">
               {/* Stats Bar */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+                aria-label="Wishlist statistics"
               >
                 <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-4 text-center">
-                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">
+                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1" aria-hidden="true">
                     {wishlistCount}
                   </div>
                   <p className="text-slate-400 text-xs font-semibold">
+                    <span className="sr-only">Count: {wishlistCount}</span>
                     Total Items
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-4 text-center">
-                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">
+                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1" aria-hidden="true">
                     $
                     {wishlistItems
                       .reduce((sum, item) => sum + item.price, 0)
                       .toFixed(0)}
                   </div>
                   <p className="text-slate-400 text-xs font-semibold">
+                    <span className="sr-only">Total value: ${wishlistItems.reduce((sum, item) => sum + item.price, 0).toFixed(0)}</span>
                     Total Value
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-4 text-center">
-                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">
+                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1" aria-hidden="true">
                     {(
                       wishlistItems.reduce(
                         (sum, item) => sum + item.ratingsAverage,
@@ -110,18 +117,22 @@ export default function WishlistPage() {
                     ).toFixed(1)}
                   </div>
                   <p className="text-slate-400 text-xs font-semibold">
+                    <span className="sr-only">Average Rating: {(wishlistItems.reduce((sum, item) => sum + item.ratingsAverage, 0) / wishlistItems.length).toFixed(1)}</span>
                     Avg Rating
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-4 text-center">
-                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">
+                  <div className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1" aria-hidden="true">
                     {
                       new Set(wishlistItems.map((item) => item.brand?.name))
                         .size
                     }
                   </div>
-                  <p className="text-slate-400 text-xs font-semibold">Brands</p>
+                  <p className="text-slate-400 text-xs font-semibold">
+                    <span className="sr-only">Total unique brands: {new Set(wishlistItems.map((item) => item.brand?.name)).size}</span>
+                    Brands
+                  </p>
                 </div>
               </motion.div>
 
@@ -137,16 +148,17 @@ export default function WishlistPage() {
                   />
                 ))}
               </div>
-            </>
+            </section>
           ) : (
             /* Empty State */
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
               className="text-center py-20 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-3xl"
+              aria-live="polite"
             >
-              <div className="w-32 h-32 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full flex items-center justify-center mx-auto mb-8">
+              <div className="w-32 h-32 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full flex items-center justify-center mx-auto mb-8" aria-hidden="true">
                 <FiHeart className="text-slate-600" size={60} />
               </div>
               <h3 className="text-3xl font-black text-white mb-3">
@@ -159,13 +171,13 @@ export default function WishlistPage() {
 
               <Link
                 href="/products"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500"
               >
                 Browse Products
               </Link>
 
               {/* Quick Links */}
-              <div className="mt-12 pt-8 border-t border-slate-800">
+              <nav className="mt-12 pt-8 border-t border-slate-800" aria-label="Popular Categories">
                 <p className="text-slate-400 text-sm mb-4">
                   Popular Categories:
                 </p>
@@ -174,17 +186,17 @@ export default function WishlistPage() {
                     <Link
                       key={cat}
                       href={`/categories/${cat.toLowerCase()}`}
-                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-full text-sm font-semibold transition-all"
+                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-full text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {cat}
                     </Link>
                   ))}
                 </div>
-              </div>
+              </nav>
             </motion.div>
           )}
         </div>
-      </section>
+      </main>
     </>
   );
 }

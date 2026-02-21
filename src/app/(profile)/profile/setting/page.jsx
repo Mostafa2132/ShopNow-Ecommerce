@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { BsStars } from "react-icons/bs";
 import {
   FiBell,
@@ -16,11 +16,14 @@ import {
 import Link from "next/link";
 import { Helmet } from "react-helmet";
 
-const ToggleSwitch = ({ enabled, onChange }) => (
+const ToggleSwitch = ({ enabled, onChange, ariaLabel }) => (
   <button
     type="button"
+    role="switch"
+    aria-checked={enabled}
+    aria-label={ariaLabel}
     onClick={() => onChange(!enabled)}
-    className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
+    className={`relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 ${
       enabled ? "bg-gradient-to-r from-purple-600 to-pink-600" : "bg-slate-700"
     }`}
   >
@@ -28,11 +31,13 @@ const ToggleSwitch = ({ enabled, onChange }) => (
       className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-300 ${
         enabled ? "left-7" : "left-1"
       }`}
+      aria-hidden="true"
     />
   </button>
 );
 
 export default function Settings() {
+  const shouldReduceMotion = useReducedMotion();
   const [settings, setSettings] = useState({
     // Notifications
     emailNotifications: true,
@@ -64,8 +69,9 @@ export default function Settings() {
       <section className="space-y-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
           className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
         >
           <div className="inline-flex items-center gap-2 bg-purple-600/10 border border-purple-500/30 px-4 py-2 rounded-full mb-4">
@@ -156,6 +162,7 @@ export default function Settings() {
                 <ToggleSwitch
                   enabled={settings[item.key]}
                   onChange={(val) => updateSetting(item.key, val)}
+                  ariaLabel={`Toggle ${item.label}`}
                 />
               </div>
             ))}
@@ -207,6 +214,7 @@ export default function Settings() {
                 <ToggleSwitch
                   enabled={settings[item.key]}
                   onChange={(val) => updateSetting(item.key, val)}
+                  ariaLabel={`Toggle ${item.label}`}
                 />
               </div>
             ))}
@@ -249,6 +257,7 @@ export default function Settings() {
               <ToggleSwitch
                 enabled={settings.darkMode}
                 onChange={(val) => updateSetting("darkMode", val)}
+                ariaLabel="Toggle Dark Mode"
               />
             </div>
 
@@ -266,6 +275,7 @@ export default function Settings() {
                 </div>
               </div>
               <select
+                aria-label="Language"
                 value={settings.language}
                 onChange={(e) => updateSetting("language", e.target.value)}
                 className="bg-slate-800 border border-slate-700 text-white text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
@@ -290,6 +300,7 @@ export default function Settings() {
                 </div>
               </div>
               <select
+                aria-label="Currency"
                 value={settings.currency}
                 onChange={(e) => updateSetting("currency", e.target.value)}
                 className="bg-slate-800 border border-slate-700 text-white text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
@@ -407,17 +418,22 @@ export default function Settings() {
         {showDeleteModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: shouldReduceMotion ? 1 : 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
               className="bg-slate-900 p-8 rounded-2xl shadow-2xl w-[90%] max-w-md border border-red-500/20"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delete-dialog-title"
+              aria-describedby="delete-dialog-description"
             >
               <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <FiTrash2 className="text-red-400" size={32} />
+                <FiTrash2 className="text-red-400" size={32} aria-hidden="true" />
               </div>
-              <h2 className="text-2xl font-black text-white text-center mb-3">
+              <h2 id="delete-dialog-title" className="text-2xl font-black text-white text-center mb-3">
                 Delete Account?
               </h2>
-              <p className="text-slate-400 text-sm text-center mb-8">
+              <p id="delete-dialog-description" className="text-slate-400 text-sm text-center mb-8">
                 This action cannot be undone. All your data, orders, and reviews
                 will be permanently deleted.
               </p>

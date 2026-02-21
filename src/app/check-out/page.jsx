@@ -127,6 +127,7 @@ export default function CheckOut() {
       setApiError(errorMessage);
       toast.error(errorMessage);
     } finally {
+      toast.dismiss(toastId);
       setIsLoading(false);
     }
   }
@@ -154,17 +155,27 @@ export default function CheckOut() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Checkout Form */}
-            <section className="lg:col-span-2" aria-labelledby="shipping-address-heading">
+            <section
+              className="lg:col-span-2"
+              aria-labelledby="shipping-address-heading"
+            >
               <motion.div
                 initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8"
               >
-                <h2 id="shipping-address-heading" className="text-2xl font-black text-white mb-6">
+                <h2
+                  id="shipping-address-heading"
+                  className="text-2xl font-black text-white mb-6"
+                >
                   Shipping Address
                 </h2>
 
-                <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
+                <form
+                  onSubmit={formik.handleSubmit}
+                  className="space-y-6"
+                  noValidate
+                >
                   {/* API Error */}
                   {apiError && (
                     <motion.div
@@ -181,8 +192,14 @@ export default function CheckOut() {
 
                   {/* Address Details */}
                   <div>
-                    <label htmlFor="details" className="block text-slate-300 text-sm font-semibold mb-2">
-                      Address Details <span className="text-red-500" aria-hidden="true">*</span>
+                    <label
+                      htmlFor="details"
+                      className="block text-slate-300 text-sm font-semibold mb-2"
+                    >
+                      Address Details{" "}
+                      <span className="text-red-500" aria-hidden="true">
+                        *
+                      </span>
                       <span className="sr-only">Required</span>
                     </label>
                     <div className="relative">
@@ -196,8 +213,14 @@ export default function CheckOut() {
                         rows={4}
                         placeholder="Street address, building number, floor, etc."
                         {...formik.getFieldProps("details")}
-                        aria-invalid={!!(formik.errors.details && formik.touched.details)}
-                        aria-describedby={formik.errors.details && formik.touched.details ? "details-error" : undefined}
+                        aria-invalid={
+                          !!(formik.errors.details && formik.touched.details)
+                        }
+                        aria-describedby={
+                          formik.errors.details && formik.touched.details
+                            ? "details-error"
+                            : undefined
+                        }
                         className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 resize-none ${
                           formik.errors.details && formik.touched.details
                             ? "border-red-500/50 focus:ring-red-500/50"
@@ -206,7 +229,11 @@ export default function CheckOut() {
                       />
                     </div>
                     {formik.errors.details && formik.touched.details && (
-                      <p id="details-error" className="flex items-center gap-2 text-red-400 text-sm mt-2" aria-live="polite">
+                      <p
+                        id="details-error"
+                        className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                        aria-live="polite"
+                      >
                         <MdErrorOutline size={16} aria-hidden="true" />
                         {formik.errors.details}
                       </p>
@@ -216,8 +243,14 @@ export default function CheckOut() {
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* Phone */}
                     <div>
-                      <label htmlFor="phone" className="block text-slate-300 text-sm font-semibold mb-2">
-                        Phone Number <span className="text-red-500" aria-hidden="true">*</span>
+                      <label
+                        htmlFor="phone"
+                        className="block text-slate-300 text-sm font-semibold mb-2"
+                      >
+                        Phone Number{" "}
+                        <span className="text-red-500" aria-hidden="true">
+                          *
+                        </span>
                         <span className="sr-only">Required</span>
                       </label>
                       <div className="relative">
@@ -231,8 +264,14 @@ export default function CheckOut() {
                           type="tel"
                           placeholder="01XXXXXXXXX"
                           {...formik.getFieldProps("phone")}
-                          aria-invalid={!!(formik.errors.phone && formik.touched.phone)}
-                          aria-describedby={formik.errors.phone && formik.touched.phone ? "phone-error" : undefined}
+                          aria-invalid={
+                            !!(formik.errors.phone && formik.touched.phone)
+                          }
+                          aria-describedby={
+                            formik.errors.phone && formik.touched.phone
+                              ? "phone-error"
+                              : undefined
+                          }
                           className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 ${
                             formik.errors.phone && formik.touched.phone
                               ? "border-red-500/50 focus:ring-red-500/50"
@@ -241,7 +280,11 @@ export default function CheckOut() {
                         />
                       </div>
                       {formik.errors.phone && formik.touched.phone && (
-                        <p id="phone-error" className="flex items-center gap-2 text-red-400 text-sm mt-2" aria-live="polite">
+                        <p
+                          id="phone-error"
+                          className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                          aria-live="polite"
+                        >
                           <MdErrorOutline size={16} aria-hidden="true" />
                           {formik.errors.phone}
                         </p>
@@ -250,8 +293,14 @@ export default function CheckOut() {
 
                     {/* City */}
                     <div>
-                      <label htmlFor="city" className="block text-slate-300 text-sm font-semibold mb-2">
-                        City <span className="text-red-500" aria-hidden="true">*</span>
+                      <label
+                        htmlFor="city"
+                        className="block text-slate-300 text-sm font-semibold mb-2"
+                      >
+                        City{" "}
+                        <span className="text-red-500" aria-hidden="true">
+                          *
+                        </span>
                         <span className="sr-only">Required</span>
                       </label>
                       <div className="relative">
@@ -265,8 +314,14 @@ export default function CheckOut() {
                           type="text"
                           placeholder="e.g., Cairo, Giza"
                           {...formik.getFieldProps("city")}
-                          aria-invalid={!!(formik.errors.city && formik.touched.city)}
-                          aria-describedby={formik.errors.city && formik.touched.city ? "city-error" : undefined}
+                          aria-invalid={
+                            !!(formik.errors.city && formik.touched.city)
+                          }
+                          aria-describedby={
+                            formik.errors.city && formik.touched.city
+                              ? "city-error"
+                              : undefined
+                          }
                           className={`w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all duration-300 ${
                             formik.errors.city && formik.touched.city
                               ? "border-red-500/50 focus:ring-red-500/50"
@@ -275,7 +330,11 @@ export default function CheckOut() {
                         />
                       </div>
                       {formik.errors.city && formik.touched.city && (
-                        <p id="city-error" className="flex items-center gap-2 text-red-400 text-sm mt-2" aria-live="polite">
+                        <p
+                          id="city-error"
+                          className="flex items-center gap-2 text-red-400 text-sm mt-2"
+                          aria-live="polite"
+                        >
                           <MdErrorOutline size={16} aria-hidden="true" />
                           {formik.errors.city}
                         </p>
@@ -285,7 +344,10 @@ export default function CheckOut() {
 
                   {/* Postal Code (Optional) */}
                   <div>
-                    <label htmlFor="postalCode" className="block text-slate-300 text-sm font-semibold mb-2">
+                    <label
+                      htmlFor="postalCode"
+                      className="block text-slate-300 text-sm font-semibold mb-2"
+                    >
                       Postal Code{" "}
                       <span className="text-slate-500">(Optional)</span>
                     </label>
@@ -414,12 +476,17 @@ export default function CheckOut() {
                     <span className="text-emerald-400 font-semibold">Free</span>
                   </div>
                   <div className="border-t border-slate-700 pt-4">
-                    <div className="flex items-center justify-between" aria-live="polite">
+                    <div
+                      className="flex items-center justify-between"
+                      aria-live="polite"
+                    >
                       <span className="text-white font-bold text-lg">
                         Total
                       </span>
                       <span className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        <span className="sr-only">Order total price in dollars</span>
+                        <span className="sr-only">
+                          Order total price in dollars
+                        </span>
                         ${cartTotal || 0}
                       </span>
                     </div>

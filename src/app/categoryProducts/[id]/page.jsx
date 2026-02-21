@@ -92,7 +92,7 @@ export default function CategoryProducts({ params }) {
         <title>ShopNow | {category.name} Products </title>
       </Helmet>
 
-      <main className="relative min-h-screen bg-slate-950 py-20">
+      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 py-20">
         {/* Background Effects */}
         <div aria-hidden="true">
           <FixedBackground />

@@ -9,7 +9,7 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import FixedBackground from "../../../Components/FixedBackground/FixedBackground";
 import FixedHeader from "../../../Components/FixedHeader/FixedHeader";
 import { Helmet } from "react-helmet";
@@ -19,6 +19,7 @@ export default function VerifyCode() {
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]);
+  const shouldReduceMotion = useReducedMotion();
 
   const router = useRouter();
 
@@ -138,32 +139,35 @@ export default function VerifyCode() {
         <title>ShopNow | Verify Code </title>
       </Helmet>
 
-      <section className="relative min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden px-4 py-20">
+      <main className="relative min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden px-4 py-20">
         {/* Background Effects */}
-        <FixedBackground />
+        <div aria-hidden="true">
+          <FixedBackground />
+        </div>
 
         {/* Verify Code Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20, scale: shouldReduceMotion ? 1 : 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
           className="relative w-full max-w-md"
         >
           <div className="relative p-8 md:p-10 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-slate-800 shadow-2xl">
             {/* Back Button */}
             <Link
               href="/forgot-password"
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 group"
+              className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 group focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1"
+              aria-label="Back to Forgot Password"
             >
               <FiArrowLeft
                 className="group-hover:-translate-x-1 transition-transform"
                 size={18}
+                aria-hidden="true"
               />
               <span className="text-sm font-semibold">Back</span>
             </Link>
 
             {/* Header */}
-
             <FixedHeader
               word={"Enter"}
               title={"Code"}
@@ -171,21 +175,22 @@ export default function VerifyCode() {
               header={"Verification"}
             />
 
-            <form onSubmit={formik.handleSubmit} className="space-y-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
               {/* API ERROR */}
               {apiError && (
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm"
+                  role="alert"
                 >
-                  <MdErrorOutline size={20} />
+                  <MdErrorOutline size={20} aria-hidden="true" />
                   <span>{apiError}</span>
                 </motion.div>
               )}
 
               {/* Code Inputs */}
-              <div>
+              <div role="group" aria-label="Verification Code">
                 <label className="block text-slate-300 text-sm font-semibold mb-4 text-center">
                   Verification Code
                 </label>
@@ -198,10 +203,13 @@ export default function VerifyCode() {
                       key={index}
                       ref={(el) => (inputRefs.current[index] = el)}
                       type="text"
+                      inputMode="numeric"
+                      pattern="\d*"
                       maxLength={1}
                       value={digit}
                       onChange={(e) => handleCodeChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
+                      aria-label={`Digit ${index + 1} of 6`}
                       className={`w-14 h-14 text-center text-2xl font-bold rounded-xl bg-slate-800/50 border text-white focus:outline-none focus:ring-2 transition-all duration-300 ${
                         formik.errors.resetCode && formik.touched.resetCode
                           ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
@@ -213,11 +221,12 @@ export default function VerifyCode() {
 
                 {formik.errors.resetCode && formik.touched.resetCode && (
                   <motion.p
-                    initial={{ opacity: 0, y: -10 }}
+                    initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center justify-center gap-2 text-red-400 text-sm mt-4"
+                    role="alert"
                   >
-                    <MdErrorOutline size={16} />
+                    <MdErrorOutline size={16} aria-hidden="true" />
                     {formik.errors.resetCode}
                   </motion.p>
                 )}
@@ -225,16 +234,16 @@ export default function VerifyCode() {
 
               {/* Submit Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
                 type="submit"
                 disabled={isLoading || code.join("").length !== 6}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group focus:outline-none focus:ring-4 focus:ring-pink-500"
               >
                 <span className="relative z-10">
                   {isLoading ? "Verifying..." : "Verify Code"}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className={`absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 transition-opacity duration-300 ${shouldReduceMotion ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`} aria-hidden="true" />
               </motion.button>
 
               {/* Resend Code */}
@@ -245,7 +254,7 @@ export default function VerifyCode() {
                 <button
                   type="button"
                   onClick={handleResendCode}
-                  className="text-purple-400 hover:text-pink-400 font-semibold text-sm transition-colors"
+                  className="text-purple-400 hover:text-pink-400 font-semibold text-sm transition-colors focus:outline-none focus:underline rounded px-2 py-1"
                 >
                   Resend Code
                 </button>
@@ -255,13 +264,13 @@ export default function VerifyCode() {
             {/* Tips */}
             <div className="mt-6 bg-slate-800/30 border border-slate-700/50 rounded-xl p-4">
               <p className="text-slate-400 text-xs text-center">
-                💡 <span className="font-semibold">Tip:</span> You can paste the
+                <span aria-hidden="true">💡</span> <span className="font-semibold">Tip:</span> You can paste the
                 entire code from your email
               </p>
             </div>
 
             {/* Divider */}
-            <div className="relative my-8">
+            <div className="relative my-8" aria-hidden="true">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-700"></div>
               </div>
@@ -275,7 +284,7 @@ export default function VerifyCode() {
               Back to{" "}
               <Link
                 href="/login"
-                className="text-purple-400 hover:text-pink-400 font-semibold transition-colors"
+                className="text-purple-400 hover:text-pink-400 font-semibold transition-colors focus:outline-none focus:underline"
               >
                 Sign In
               </Link>
@@ -283,9 +292,9 @@ export default function VerifyCode() {
           </div>
 
           {/* Glow Effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
+          <div className={`absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-xl transition-opacity duration-500 -z-10 ${shouldReduceMotion ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`} aria-hidden="true" />
         </motion.div>
-      </section>
+      </main>
     </>
   );
 }

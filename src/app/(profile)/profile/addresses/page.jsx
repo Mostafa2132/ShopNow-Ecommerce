@@ -2,8 +2,7 @@
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { FiMapPin, FiPlus, FiTrash2 } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { FiMapPin, FiPlus } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import Add_Address_Modal from "../../../../Components/Add_Address_Modal/Add_Address_Modal";
@@ -90,32 +89,34 @@ export default function Addresses() {
       <Helmet>
         <title>ShopNow | Address </title>
       </Helmet>
-      <section className="space-y-6">
+      <div className="space-y-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-black text-white">My Addresses</h2>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl flex items-center gap-2 hover:scale-105 transition-transform"
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl flex items-center gap-2 hover:scale-105 transition-transform focus:outline-none focus:ring-4 focus:ring-pink-500"
+            aria-label="Add new address"
           >
-            <FiPlus size={20} />
+            <FiPlus size={20} aria-hidden="true" />
             Add Address
           </button>
         </div>
 
         {addresses.length > 0 ? (
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6" role="list" aria-label="Your addresses">
             {addresses.map((address) => (
-              <AddressCard
-                key={address._id}
-                address={address}
-                deleteMutation={deleteMutation}
-                handleDeleteAddress={handleDeleteAddress}
-              />
+              <div key={address._id} role="listitem">
+                <AddressCard
+                  address={address}
+                  deleteMutation={deleteMutation}
+                  handleDeleteAddress={handleDeleteAddress}
+                />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl">
-            <FiMapPin className="text-slate-600 mx-auto mb-4" size={48} />
+          <div className="text-center py-20 bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl" aria-live="polite">
+            <FiMapPin className="text-slate-600 mx-auto mb-4" size={48} aria-hidden="true" />
             <h3 className="text-white font-bold text-xl mb-2">
               No Addresses Yet
             </h3>
@@ -124,13 +125,13 @@ export default function Addresses() {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:scale-105 transition-transform"
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:scale-105 transition-transform focus:outline-none focus:ring-4 focus:ring-pink-500"
             >
               Add Address
             </button>
           </div>
         )}
-      </section>
+      </div>
 
       <Add_Address_Modal
         isOpen={isModalOpen}
