@@ -180,7 +180,7 @@ export default function Footer() {
             <p className="text-slate-400 text-sm text-center md:text-left">
               © {currentYear} ShopNow. All rights reserved. Made with{" "}
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 font-black bg-clip-text text-transparent">
-                Mosatfa M.Ebrahem
+                Mostafa M.Ebrahem
               </span>{" "}
               ❤️
             </p>
