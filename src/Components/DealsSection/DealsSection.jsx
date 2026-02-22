@@ -63,7 +63,7 @@ export default function DealsSection() {
   className="text-center"
 >
   <Link
-    href="/deals"
+    href="/deal"
     className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 group"
   >
     View All Deals
